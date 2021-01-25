@@ -4,6 +4,7 @@ import 'package:flutter_expense_calc/widgets/transaction_list.dart';
 
 import 'models/const.dart';
 import 'models/transaction.dart';
+
 //edit
 void main() {
   runApp(MyApp());
@@ -29,7 +30,23 @@ class MyApp extends StatelessWidget {
         primarySwatch: themeColor,
         accentColor: accentColor,
         fontFamily: 'Quicksand',
-    //    appBarTheme: AppBarTheme()
+        textTheme: ThemeData.light().textTheme.copyWith(
+              headline6: TextStyle(
+                fontFamily: 'OpenSans',
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+        appBarTheme: AppBarTheme(
+          textTheme: ThemeData.light().textTheme.copyWith(
+                headline6: TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+        ),
       ),
       home: MyHomePage(),
     );
@@ -42,42 +59,46 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   final List<Transaction> _userTransaction = [
-    Transaction(
-      id: 't1',
-      title: 'New Shoes',
-      amount: 69.99,
-      date: DateTime.now(),
-    ),
-    Transaction(
-        id: 't2',
-        title: 'Weekly Groceries',
-        amount: 166.53,
-        date: DateTime.now())
+    // Transaction(
+    //   id: 't1',
+    //   title: 'New Shoes',
+    //   amount: 69.99,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //     id: 't2',
+    //     title: 'Weekly Groceries',
+    //     amount: 166.53,
+    //     date: DateTime.now())
   ];
 
-  void _addNewTransaction(String txTitle, double txAmount){
-    final newTx = Transaction(title: txTitle, amount: txAmount, date: DateTime.now(), id: DateTime.now().toString() );
+  void _addNewTransaction(String txTitle, double txAmount) {
+    final newTx = Transaction(
+        title: txTitle,
+        amount: txAmount,
+        date: DateTime.now(),
+        id: DateTime.now().toString());
     setState(() {
       _userTransaction.add(newTx);
     });
   }
 
-
-  void _startAddNewTransaction(BuildContext ctx){
-    showModalBottomSheet(context: ctx, builder: (_){
-      return NewTransaction(_addNewTransaction);
-    } );
+  void _startAddNewTransaction(BuildContext ctx) {
+    showModalBottomSheet(
+        context: ctx,
+        builder: (_) {
+          return NewTransaction(_addNewTransaction);
+        });
   }
-
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Personal Expenses', style: TextStyle(fontFamily: 'Open Sans'),),
+        title: Text(
+          'Personal Expenses',
+        ),
         actions: [
           IconButton(
               icon: Icon(Icons.add),
@@ -98,7 +119,9 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             //UserTransactions(),
-            TransactionList(userTransaction: _userTransaction,),
+            TransactionList(
+              userTransaction: _userTransaction,
+            ),
           ],
         ),
       ),
