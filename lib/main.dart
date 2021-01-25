@@ -77,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter App'),
+        title: Text('Personal Expenses', style: TextStyle(fontFamily: 'Open Sans'),),
         actions: [
           IconButton(
               icon: Icon(Icons.add),
