@@ -4,6 +4,7 @@ import 'package:flutter_expense_calc/widgets/transaction_list.dart';
 
 import 'models/const.dart';
 import 'models/transaction.dart';
+import 'widgets/chart.dart';
 
 //edit
 void main() {
@@ -27,8 +28,8 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: themeColor,
-        accentColor: accentColor,
+        //primarySwatch: themeColor,
+        //accentColor: accentColor,
         fontFamily: 'Quicksand',
         textTheme: ThemeData.light().textTheme.copyWith(
               headline6: TextStyle(
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
               ),
             ),
         appBarTheme: AppBarTheme(
+          color: themeColor,
           textTheme: ThemeData.light().textTheme.copyWith(
                 headline6: TextStyle(
                   fontFamily: 'OpenSans',
@@ -45,6 +47,9 @@ class MyApp extends StatelessWidget {
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
+            button: TextStyle(
+              color: Colors.white,
+            ),
               ),
         ),
       ),
@@ -72,15 +77,29 @@ class _MyHomePageState extends State<MyHomePage> {
     //     amount: 166.53,
     //     date: DateTime.now())
   ];
-
-  void _addNewTransaction(String txTitle, double txAmount) {
+  List<Transaction> get _recentTransactions {
+    return _userTransaction.where((tx){
+      return tx.date.isAfter(
+          DateTime.now().subtract(
+              Duration(days: 7),
+          ),
+      );
+    }).toList();
+  }
+  void _addNewTransaction(String txTitle, double txAmount, DateTime dateData) {
     final newTx = Transaction(
         title: txTitle,
         amount: txAmount,
-        date: DateTime.now(),
+        date: dateData,
         id: DateTime.now().toString());
     setState(() {
       _userTransaction.add(newTx);
+    });
+  }
+
+  void _deleteTransaction(String idToDelete){
+    setState(() {
+      _userTransaction.removeWhere((tx) => tx.id == idToDelete);
     });
   }
 
@@ -94,41 +113,38 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Personal Expenses',
-        ),
-        actions: [
-          IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                _startAddNewTransaction(context);
-              }),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              child: Card(
-                color: Colors.blue,
-                child: Text('CHART!'),
-                elevation: 5.0,
-              ),
-            ),
-            //UserTransactions(),
-            TransactionList(
-              userTransaction: _userTransaction,
-            ),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Personal Expenses',
+          ),
+          actions: [
+            IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () {
+                  _startAddNewTransaction(context);
+                }),
           ],
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () => _startAddNewTransaction(context),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Chart(recentTransactions: _recentTransactions,),
+              //UserTransactions(),
+              TransactionList(
+                userTransaction: _userTransaction,
+                trxToDelete: _deleteTransaction,
+              ),
+            ],
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: amountBackgroundColor,
+          child: Icon(Icons.add),
+          onPressed: () => _startAddNewTransaction(context),
+        ),
       ),
     );
   }
