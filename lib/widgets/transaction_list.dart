@@ -12,9 +12,7 @@ class TransactionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      child: userTransaction.isEmpty
+    return userTransaction.isEmpty
           ? Column(
               children: [
                 Text(
@@ -115,7 +113,8 @@ class TransactionList extends StatelessWidget {
                   ),
                 );
               },
-            ),
     );
   }
 }
+
+//TODO: Need to add a module to remember stuff,its called...
