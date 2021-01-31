@@ -23,7 +23,7 @@ class TransactionList extends StatelessWidget {
                   height: 50,
                 ),
                 Container(
-                  height: 200,
+                  height: MediaQuery.of(context).size.height * 0.30,
                   child: Image.asset(
                     'assets/images/waiting.png',
                     fit: BoxFit.cover,
