@@ -10,10 +10,10 @@ import 'widgets/chart.dart';
 //edit
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  //   DeviceOrientation.portraitDown,
+  // ]);
   runApp(MyApp());
 }
 
@@ -70,19 +70,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool _showChart = false;
+
+ // bool isLandscape = SystemChrome.setPreferredOrientations(orientations)
+  
   final List<Transaction> _userTransaction = [
-    // Transaction(
-    //   id: 't1',
-    //   title: 'New Shoes',
-    //   amount: 69.99,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //     id: 't2',
-    //     title: 'Weekly Groceries',
-    //     amount: 166.53,
-    //     date: DateTime.now())
   ];
+  
   List<Transaction> get _recentTransactions {
     return _userTransaction.where((tx){
       return tx.date.isAfter(
@@ -118,8 +112,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
 
+
   @override
   Widget build(BuildContext context) {
+    bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     var appBar = AppBar(
       title: Text(
         'Personal Expenses',
@@ -132,23 +128,43 @@ class _MyHomePageState extends State<MyHomePage> {
             }),
       ],
     );
+    var chartWidget = Container(
+      height: (MediaQuery.of(context).size.height - appBar.preferredSize.height) * 0.30,
+      child: Chart(recentTransactions: _recentTransactions,),);
+    var trxList = Container(
+      height: (MediaQuery.of
+        (context).size.height - appBar.preferredSize.height) * 0.65,
+      child: TransactionList(
+        userTransaction: _userTransaction,
+        trxToDelete: _deleteTransaction,
+      ),
+    );
     return SafeArea(
       child: Scaffold(
         appBar: appBar,
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
-                height: (MediaQuery.of(context).size.height - appBar.preferredSize.height) * 0.35,
-                child: Chart(recentTransactions: _recentTransactions,),),
-              //UserTransactions(),
-              Container(
-                height: (MediaQuery.of(context).size.height - appBar.preferredSize.height) * 0.65,
-                child: TransactionList(
-                  userTransaction: _userTransaction,
-                  trxToDelete: _deleteTransaction,
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10.0,4.0,5.0,0.0),
+                    child: Text('show chart'),
+                  ),
+                  Switch(
+                  value: _showChart,
+                  onChanged: ((val){
+                    setState(() {
+                      _showChart = val;
+                      print(val);
+                    });
+                  }),
                 ),
+            ],
               ),
+              _showChart ? chartWidget : trxList
+      //UserTransactions(),
             ],
           ),
         ),
