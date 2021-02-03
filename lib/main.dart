@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_expense_calc/widgets/new_transaction.dart';
 import 'package:flutter_expense_calc/widgets/transaction_list.dart';
-import  'package:flutter/services.dart';
+import 'package:flutter/services.dart';
 
 import 'models/const.dart';
 import 'models/transaction.dart';
@@ -53,9 +53,9 @@ class MyApp extends StatelessWidget {
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
-            button: TextStyle(
-              color: Colors.white,
-            ),
+                button: TextStyle(
+                  color: Colors.white,
+                ),
               ),
         ),
       ),
@@ -72,20 +72,20 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool _showChart = false;
 
- // bool isLandscape = SystemChrome.setPreferredOrientations(orientations)
-  
-  final List<Transaction> _userTransaction = [
-  ];
-  
+  // bool isLandscape = SystemChrome.setPreferredOrientations(orientations)
+
+  final List<Transaction> _userTransaction = [];
+
   List<Transaction> get _recentTransactions {
-    return _userTransaction.where((tx){
+    return _userTransaction.where((tx) {
       return tx.date.isAfter(
-          DateTime.now().subtract(
-              Duration(days: 7),
-          ),
+        DateTime.now().subtract(
+          Duration(days: 7),
+        ),
       );
     }).toList();
   }
+
   void _addNewTransaction(String txTitle, double txAmount, DateTime dateData) {
     final newTx = Transaction(
         title: txTitle,
@@ -97,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _deleteTransaction(String idToDelete){
+  void _deleteTransaction(String idToDelete) {
     setState(() {
       _userTransaction.removeWhere((tx) => tx.id == idToDelete);
     });
@@ -111,11 +111,10 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-    bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     var appBar = AppBar(
       title: Text(
         'Personal Expenses',
@@ -129,11 +128,17 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
     var chartWidget = Container(
-      height: (MediaQuery.of(context).size.height - appBar.preferredSize.height) * 0.30,
-      child: Chart(recentTransactions: _recentTransactions,),);
+      height:
+          (MediaQuery.of(context).size.height - appBar.preferredSize.height) *
+              ((isLandscape) ? 0.50 : 0.30),
+      child: Chart(
+        recentTransactions: _recentTransactions,
+      ),
+    );
     var trxList = Container(
-      height: (MediaQuery.of
-        (context).size.height - appBar.preferredSize.height) * 0.65,
+      height:
+          (MediaQuery.of(context).size.height - appBar.preferredSize.height) *
+              0.65,
       child: TransactionList(
         userTransaction: _userTransaction,
         trxToDelete: _deleteTransaction,
@@ -145,26 +150,28 @@ class _MyHomePageState extends State<MyHomePage> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+              if (isLandscape) Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(10.0,4.0,5.0,0.0),
+                    padding: const EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                     child: Text('show chart'),
                   ),
                   Switch(
-                  value: _showChart,
-                  onChanged: ((val){
-                    setState(() {
-                      _showChart = val;
-                      print(val);
-                    });
-                  }),
-                ),
-            ],
+                    value: _showChart,
+                    onChanged: ((val) {
+                      setState(() {
+                        _showChart = val;
+                        print(val);
+                      });
+                    }),
+                  ),
+                ],
               ),
-              _showChart ? chartWidget : trxList
-      //UserTransactions(),
+             if(isLandscape) (_showChart ? chartWidget : trxList),
+              //UserTransactions()}
+              if(!isLandscape) chartWidget,
+              if(!isLandscape) trxList,
             ],
           ),
         ),
