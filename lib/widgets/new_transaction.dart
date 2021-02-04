@@ -57,57 +57,67 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            TextField(
-              cursorColor: themeColor,
-              decoration: InputDecoration(labelText: 'Title'),
-              // onChanged: (titleValue){
-              //   titleInput = titleValue;
-              // },
-              controller: _titleController,
-            ),
-            TextField(
-              cursorColor: themeColor,
-              decoration: InputDecoration(labelText: 'Amount'),
-              controller: _amountController,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-              //onSubmitted: (_) => _submitData(), //Disabled so that date picker can be chosen
-              // onChanged: (val)=> amountInput = val,
-            ),
-            Container(
-              height: 60,
-              child: Row(
-                children: [
-                  Expanded(child: Text((_selectedDate == null) ? 'No Date Chosen' : 'Transaction Date: ${DateFormat.yMd().format(_selectedDate)}')),
-                  FlatButton(
-                    child: Text(
-                      'choose Date',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    textColor: Theme.of(context).primaryColor,
-                    onPressed: _presentDatePicker,
-                  ),
-                ],
+    final node = FocusScope.of(context);
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5,
+        child: Container(
+          padding: EdgeInsets.only(
+            top: 10,
+            left: 10,
+            right: 10,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              TextField(
+                cursorColor: themeColor,
+                decoration: InputDecoration(labelText: 'Title'),
+                onEditingComplete: () => node.nextFocus(), //This is used to put the focus to the next text field
+                // onChanged: (titleValue){
+                //   titleInput = titleValue;
+                // },
+                controller: _titleController,
               ),
-            ),
-            RaisedButton(
-              onPressed: _submitData,
-              child: Text(
-                'Add Transaction',
-                style: TextStyle(
-                  color:
-                      themeTextColor, //ToDO: Put a way for conditional argument so if theme color then white otherwihse dark
+              TextField(
+                cursorColor: themeColor,
+                decoration: InputDecoration(labelText: 'Amount'),
+                controller: _amountController,
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                onSubmitted: (_) => node.unfocus(),
+                //onSubmitted: (_) => _submitData(), //Disabled so that date picker can be chosen
+                // onChanged: (val)=> amountInput = val,
+              ),
+              Container(
+                height: 60,
+                child: Row(
+                  children: [
+                    Expanded(child: Text((_selectedDate == null) ? 'No Date Chosen' : 'Transaction Date: ${DateFormat.yMd().format(_selectedDate)}')),
+                    FlatButton(
+                      child: Text(
+                        'choose Date',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      textColor: Theme.of(context).primaryColor,
+                      onPressed: _presentDatePicker,
+                    ),
+                  ],
                 ),
               ),
-              color: themeColor,
-            )
-          ],
+              RaisedButton(
+                onPressed: _submitData,
+                child: Text(
+                  'Add Transaction',
+                  style: TextStyle(
+                    color:
+                        themeTextColor, //ToDO: Put a way for conditional argument so if theme color then white otherwihse dark
+                  ),
+                ),
+                color: themeColor,
+              )
+            ],
+          ),
         ),
       ),
     );
