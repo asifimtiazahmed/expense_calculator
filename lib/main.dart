@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_expense_calc/widgets/new_transaction.dart';
 import 'package:flutter_expense_calc/widgets/transaction_list.dart';
 import 'package:flutter/services.dart';
+import 'dart:io'; // we use this to check platform
 
 import 'models/const.dart';
 import 'models/transaction.dart';
@@ -157,7 +158,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding: const EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                     child: Text('show chart'),
                   ),
-                  Switch(
+                  Switch.adaptive( //we use adaptive to change it with iOS
+                    activeColor: Theme.of(context).accentColor,
                     value: _showChart,
                     onChanged: ((val) {
                       setState(() {
