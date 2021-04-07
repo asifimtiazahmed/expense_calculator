@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
       title: 'Expense Tracker',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        //Theme data is there to provide a standardised way to create color theme
         // This is the theme of your application.
         //
         // Try running your application with "flutter run". You'll see the
